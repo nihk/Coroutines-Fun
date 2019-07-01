@@ -9,27 +9,25 @@ import java.lang.Exception
 
 abstract class NetworkBoundResource<T> {
 
-    fun asLiveData(): LiveData<Resource<T>> {
-        return liveData<Resource<T>>(Dispatchers.IO) {
-            emit(Resource.Loading(null))
+    fun asLiveData() = liveData<Resource<T>>(Dispatchers.IO) {
+        emit(Resource.Loading(null))
 
-            if (shouldFetch(query())) {
-                val disposable = emitSource(queryObservable().map { Resource.Loading(it) })
+        if (shouldFetch(query())) {
+            val disposable = emitSource(queryObservable().map { Resource.Loading(it) })
 
-                try {
-                    val fetchedData = fetch()
-                    // Stop the previous emission to avoid dispatching the saveCallResult as `Resource.Loading`.
-                    disposable.dispose()
-                    saveCallResult(fetchedData)
-                    // Re-establish the emission as `Resource.Success`.
-                    emitSource(queryObservable().map { Resource.Success(it) })
-                } catch (e: Exception) {
-                    onFetchFailed()
-                    emitSource(queryObservable().map { Resource.Error(e, it) })
-                }
-            } else {
+            try {
+                val fetchedData = fetch()
+                // Stop the previous emission to avoid dispatching the saveCallResult as `Resource.Loading`.
+                disposable.dispose()
+                saveCallResult(fetchedData)
+                // Re-establish the emission as `Resource.Success`.
                 emitSource(queryObservable().map { Resource.Success(it) })
+            } catch (e: Exception) {
+                onFetchFailed()
+                emitSource(queryObservable().map { Resource.Error(e, it) })
             }
+        } else {
+            emitSource(queryObservable().map { Resource.Success(it) })
         }
     }
 
