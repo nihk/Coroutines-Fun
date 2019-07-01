@@ -5,7 +5,7 @@ import retrofit2.http.GET
 interface GitHubJobsService {
 
     companion object {
-        const val baseUrl = "https://jobs.github.com/positions.json/"
+        const val baseUrl = "https://jobs.github.com/"
     }
 
     @GET("positions.json")

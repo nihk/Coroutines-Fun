@@ -1,14 +1,12 @@
 package ca.cbc.testingfun2.vm
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import ca.cbc.testingfun2.data.GitHubJobsRepository
+import javax.inject.Inject
 
-class GitHubJobsViewModel : ViewModel() {
+class GitHubJobsViewModel @Inject constructor(
+    private val repository: GitHubJobsRepository
+) : ViewModel() {
 
-    fun getJobs() {
-        viewModelScope.launch {
-
-        }
-    }
+    val gitHubJobs = repository.gitHubJobs
 }

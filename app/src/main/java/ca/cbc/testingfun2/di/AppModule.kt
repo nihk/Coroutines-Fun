@@ -11,7 +11,8 @@ import dagger.Reusable
 
 @Module(
     includes = [
-        ViewModelModule::class
+        ViewModelModule::class,
+        NetworkingModule::class
     ]
 )
 object AppModule {
