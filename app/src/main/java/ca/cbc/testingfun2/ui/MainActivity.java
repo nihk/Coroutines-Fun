@@ -46,14 +46,14 @@ public class MainActivity extends DaggerAppCompatActivity {
         insertARow = findViewById(R.id.button);
         insertARow.setOnClickListener(__ -> {
             GitHubJob gitHubJob = new GitHubJob(String.valueOf(id++), "A title", "A company");
-            viewModel.setPendingScrollAction(ScrollAction.ScrollToTop);
+            viewModel.setPendingScrollAction(ScrollAction.SCROLL_TO_TOP);
             disableButtons();
             viewModel.insertJob(gitHubJob);
         });
 
         refresh = findViewById(R.id.refresh);
         refresh.setOnClickListener(__ -> {
-            viewModel.setPendingScrollAction(ScrollAction.ScrollToTop);
+            viewModel.setPendingScrollAction(ScrollAction.SCROLL_TO_TOP);
             disableButtons();
             viewModel.fetchGitHubJobs();
         });
@@ -88,10 +88,10 @@ public class MainActivity extends DaggerAppCompatActivity {
 
     private void performScrollAction() {
         ScrollAction scrollAction = viewModel.getPendingScrollAction();
-        if (scrollAction == ScrollAction.ScrollToTop) {
+        if (scrollAction == ScrollAction.SCROLL_TO_TOP) {
             recyclerView.post(() -> {
                 recyclerView.scrollToPosition(0);
-                viewModel.setPendingScrollAction(ScrollAction.None);
+                viewModel.setPendingScrollAction(ScrollAction.NONE);
             });
         }
     }

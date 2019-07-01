@@ -19,7 +19,7 @@ class GitHubJobsViewModel @Inject constructor(
         repository.getGitHubJobs()
     }
 
-    var pendingScrollAction: ScrollAction = ScrollAction.None
+    var pendingScrollAction: ScrollAction = ScrollAction.NONE
 
     fun insertJob(gitHubJob: GitHubJob) {
         viewModelScope.launch {
