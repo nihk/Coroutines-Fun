@@ -16,6 +16,9 @@ interface GitHubJobsDao {
     suspend fun insert(gitHubJob: GitHubJob)
 
     @Query("SELECT * FROM github_jobs ORDER BY title")
+    suspend fun queryAll(): List<GitHubJob>
+
+    @Query("SELECT * FROM github_jobs ORDER BY title")
     fun queryAllLiveData(): LiveData<List<GitHubJob>>
 
     @Query("DELETE FROM github_jobs")

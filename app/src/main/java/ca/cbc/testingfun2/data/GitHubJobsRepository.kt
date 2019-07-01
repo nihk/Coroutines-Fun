@@ -1,11 +1,8 @@
 package ca.cbc.testingfun2.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.map
 import ca.cbc.testingfun2.di.AppScope
 import ca.cbc.testingfun2.util.Resource
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 // https://developer.android.com/topic/libraries/architecture/coroutines
@@ -20,22 +17,24 @@ class GitHubJobsRepository @Inject constructor(
     }
 
     fun getGitHubJobs(): LiveData<Resource<List<GitHubJob>>> {
-        return liveData<Resource<List<GitHubJob>>>(Dispatchers.IO) {
-            emit(Resource.Loading(null))
-            val disposable = emitSource(gitHubJobsDao.queryAllLiveData().map { Resource.Loading(it) })
-
-            try {
-                val gitHubJobs = gitHubJobsService.fetchJobs()
-                // Stop the previous emission to avoid dispatching the fetched jobs as `loading`.
-                disposable.dispose()
-                // Update the database.
-                gitHubJobsDao.deleteAll()
-                gitHubJobsDao.insertAll(gitHubJobs)
-                // Re-establish the emission with success type.
-                emitSource(gitHubJobsDao.queryAllLiveData().map { Resource.Success(it) })
-            } catch (e: Exception) {
-                emitSource(gitHubJobsDao.queryAllLiveData().map { Resource.Error(e, it) })
+        return object : NetworkBoundResource<List<GitHubJob>>() {
+            override suspend fun query(): List<GitHubJob> {
+                return gitHubJobsDao.queryAll()
             }
-        }
+
+            override fun queryObservable(): LiveData<List<GitHubJob>> {
+                return gitHubJobsDao.queryAllLiveData()
+            }
+
+            override suspend fun fetch(): List<GitHubJob> {
+                return gitHubJobsService.fetchJobs()
+            }
+
+            override suspend fun saveCallResult(data: List<GitHubJob>) {
+                gitHubJobsDao.deleteAll()
+                gitHubJobsDao.insertAll(data)
+            }
+
+        }.asLiveData()
     }
 }
