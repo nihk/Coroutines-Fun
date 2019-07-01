@@ -37,6 +37,8 @@ abstract class NetworkBoundResource<T> {
     abstract fun queryObservable(): LiveData<T>
     abstract suspend fun fetch(): T
     abstract suspend fun saveCallResult(data: T)
+
     open fun onFetchFailed() {}
+
     open fun shouldFetch(data: T) = true
 }
