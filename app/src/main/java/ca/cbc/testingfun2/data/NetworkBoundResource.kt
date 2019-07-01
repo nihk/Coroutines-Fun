@@ -18,10 +18,10 @@ abstract class NetworkBoundResource<T> {
 
                 try {
                     val fetchedData = fetch()
-                    // Stop the previous emission to avoid dispatching the fetched data as `loading`.
+                    // Stop the previous emission to avoid dispatching the saveCallResult as `Resource.Loading`.
                     disposable.dispose()
                     saveCallResult(fetchedData)
-                    // Re-establish the emission with success type.
+                    // Re-establish the emission as `Resource.Success`.
                     emitSource(queryObservable().map { Resource.Success(it) })
                 } catch (e: Exception) {
                     onFetchFailed()
