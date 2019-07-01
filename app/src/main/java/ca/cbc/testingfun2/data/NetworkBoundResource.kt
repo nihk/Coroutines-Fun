@@ -12,9 +12,8 @@ abstract class NetworkBoundResource<T> {
     fun asLiveData(): LiveData<Resource<T>> {
         return liveData<Resource<T>>(Dispatchers.IO) {
             emit(Resource.Loading(null))
-            val data = query()
 
-            if (shouldFetch(data)) {
+            if (shouldFetch(query())) {
                 val disposable = emitSource(queryObservable().map { Resource.Loading(it) })
 
                 try {
