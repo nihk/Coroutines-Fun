@@ -6,5 +6,5 @@ import androidx.room.RoomDatabase
 @Database(entities = [GitHubJob::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun gitHubJobsDao(): GitHubJobDao
+    abstract fun gitHubJobsDao(): GitHubJobsDao
 }
