@@ -2,6 +2,7 @@ package ca.cbc.testingfun2.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ public class MainActivity extends DaggerAppCompatActivity {
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private Button insertARow;
+    private Button refresh;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,19 +44,24 @@ public class MainActivity extends DaggerAppCompatActivity {
         recyclerView.setAdapter(adapter);
         progressBar = findViewById(R.id.progress_bar);
 
-        observeGitHubJobs();
-        viewModel.fetchGitHubJobs();
-
-        findViewById(R.id.button).setOnClickListener(__ -> {
+        insertARow = findViewById(R.id.button);
+        insertARow.setOnClickListener(__ -> {
             GitHubJob gitHubJob = new GitHubJob(String.valueOf(id++), "A title", "A company");
             viewModel.setPendingScrollAction(ScrollAction.ScrollToTop);
+            disableButtons();
             viewModel.insertJob(gitHubJob);
         });
 
-        findViewById(R.id.refresh).setOnClickListener(__ -> {
+        refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(__ -> {
             viewModel.setPendingScrollAction(ScrollAction.ScrollToTop);
+            disableButtons();
             viewModel.fetchGitHubJobs();
         });
+
+        observeGitHubJobs();
+        disableButtons();
+        viewModel.fetchGitHubJobs();
     }
 
     private void observeGitHubJobs() {
@@ -67,12 +75,14 @@ public class MainActivity extends DaggerAppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 adapter.submitList(resource.getData());
                 performScrollAction();
+                enableButtons();
             } else if (resource instanceof Resource.Error) {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(this, "Failed to fetch new Jobs", Toast.LENGTH_LONG)
                         .show();
                 adapter.submitList(resource.getData());
                 performScrollAction();
+                enableButtons();
             }
         });
     }
@@ -88,5 +98,18 @@ public class MainActivity extends DaggerAppCompatActivity {
                 }
             });
         }
+    }
+
+    private void disableButtons() {
+        setButtonsEnabled(false);
+    }
+
+    private void enableButtons() {
+        setButtonsEnabled(true);
+    }
+
+    private void setButtonsEnabled(boolean isEnabled) {
+        insertARow.setEnabled(isEnabled);
+        refresh.setEnabled(isEnabled);
     }
 }
