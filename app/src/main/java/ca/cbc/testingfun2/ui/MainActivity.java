@@ -59,9 +59,9 @@ public class MainActivity extends DaggerAppCompatActivity {
         });
 
         observeGitHubJobs();
-        disableButtons();
 
         if (savedInstanceState == null) {
+            disableButtons();
             viewModel.fetchGitHubJobs();
         }
     }
@@ -84,7 +84,6 @@ public class MainActivity extends DaggerAppCompatActivity {
                         .show();
                 adapter.submitList(resource.getData());
                 enableButtons();
-                performScrollAction();
             }
         });
     }

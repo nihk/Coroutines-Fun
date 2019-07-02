@@ -5,7 +5,6 @@ import ca.cbc.testingfun2.di.AppScope
 import ca.cbc.testingfun2.util.Resource
 import javax.inject.Inject
 
-// https://developer.android.com/topic/libraries/architecture/coroutines
 @AppScope
 class GitHubJobsRepository @Inject constructor(
     private val gitHubJobsService: GitHubJobsService,

@@ -7,6 +7,7 @@ import ca.cbc.testingfun2.util.Resource
 import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
 
+// https://developer.android.com/topic/libraries/architecture/coroutines
 abstract class NetworkBoundResource<T> {
 
     fun asLiveData() = liveData<Resource<T>>(Dispatchers.IO) {
