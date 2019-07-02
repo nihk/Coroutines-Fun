@@ -21,7 +21,7 @@ object AppModule {
     @Provides
     @AppContext
     @JvmStatic
-    fun appContext(application: Application) = application.applicationContext
+    fun appContext(application: Application): Context = application.applicationContext
 
     @Reusable
     @Provides
