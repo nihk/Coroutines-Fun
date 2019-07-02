@@ -39,9 +39,9 @@ public class MainActivity extends DaggerAppCompatActivity {
         setContentView(R.layout.activity_main);
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GitHubJobsViewModel.class);
+        progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter);
-        progressBar = findViewById(R.id.progress_bar);
 
         insertARow = findViewById(R.id.button);
         insertARow.setOnClickListener(__ -> {
@@ -80,7 +80,7 @@ public class MainActivity extends DaggerAppCompatActivity {
                 performScrollAction();
             } else if (resource instanceof Resource.Error) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(this, "Failed to fetch new Jobs", Toast.LENGTH_LONG)
+                Toast.makeText(this, "Failed to fetch new jobs", Toast.LENGTH_LONG)
                         .show();
                 adapter.submitList(resource.getData());
                 enableButtons();
@@ -91,6 +91,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     private void performScrollAction() {
         ScrollAction scrollAction = viewModel.getPendingScrollAction();
         if (scrollAction == ScrollAction.SCROLL_TO_TOP) {
+            // Wait for ListAdapter::submitList to finish in its background thread.
             recyclerView.post(() -> {
                 recyclerView.scrollToPosition(0);
                 viewModel.setPendingScrollAction(ScrollAction.NONE);
