@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import ca.cbc.testingfun2.data.GitHubJob
 import ca.cbc.testingfun2.data.GitHubJobsRepository
 import ca.cbc.testingfun2.ui.ScrollAction
+import ca.cbc.testingfun2.util.EspressoIdlingResource
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +23,10 @@ class GitHubJobsViewModel @Inject constructor(
     var pendingScrollAction: ScrollAction = ScrollAction.NONE
 
     fun insertJob(gitHubJob: GitHubJob) {
+        EspressoIdlingResource.increment()
         viewModelScope.launch {
             repository.insertJob(gitHubJob)
+            EspressoIdlingResource.decrement()
         }
     }
 
