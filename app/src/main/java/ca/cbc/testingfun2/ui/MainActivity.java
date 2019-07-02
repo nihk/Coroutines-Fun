@@ -60,7 +60,10 @@ public class MainActivity extends DaggerAppCompatActivity {
 
         observeGitHubJobs();
         disableButtons();
-        viewModel.fetchGitHubJobs();
+
+        if (savedInstanceState == null) {
+            viewModel.fetchGitHubJobs();
+        }
     }
 
     private void observeGitHubJobs() {
