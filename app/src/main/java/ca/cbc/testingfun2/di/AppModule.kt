@@ -8,11 +8,13 @@ import ca.cbc.testingfun2.data.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import kotlinx.coroutines.Dispatchers
 
 @Module(
     includes = [
         ViewModelModule::class,
-        NetworkingModule::class
+        NetworkingModule::class,
+        RepositoryModule::class
     ]
 )
 object AppModule {
@@ -27,7 +29,10 @@ object AppModule {
     @Provides
     @JvmStatic
     fun sharedPreferences(@AppContext appContext: Context): SharedPreferences = with(appContext) {
-        return@sharedPreferences getSharedPreferences("${packageName}_preferences", Context.MODE_PRIVATE)
+        return@sharedPreferences getSharedPreferences(
+            "${packageName}_preferences",
+            Context.MODE_PRIVATE
+        )
     }
 
     @AppScope
@@ -42,4 +47,9 @@ object AppModule {
     @Provides
     @JvmStatic
     fun gitHubJobsDao(appDatabase: AppDatabase) = appDatabase.gitHubJobsDao()
+
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun ioDispatcher() = Dispatchers.IO
 }

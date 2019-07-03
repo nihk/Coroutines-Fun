@@ -4,7 +4,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ca.cbc.testingfun2.data.AppDatabase
-import ca.cbc.testingfun2.data.GitHubJob
 import ca.cbc.testingfun2.data.GitHubJobsDao
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -32,7 +31,7 @@ class AppDatabaseTest {
 
     @Test
     fun insertGitHubJobSavesData() = runBlocking {
-        val gitHubJob = createDummyGitHubJob()
+        val gitHubJob = DummyGitHubJobCreator.one()
         dao.insert(gitHubJob)
 
         val gitHubJobs = dao.queryAll()
@@ -43,7 +42,7 @@ class AppDatabaseTest {
 
     @Test
     fun deleteAll() = runBlocking {
-        val gitHubJob = createDummyGitHubJob()
+        val gitHubJob = DummyGitHubJobCreator.one()
         dao.insert(gitHubJob)
         dao.deleteAll()
 
@@ -51,10 +50,4 @@ class AppDatabaseTest {
 
         assert(gitHubJobs.isEmpty())
     }
-
-    private fun createDummyGitHubJob() = GitHubJob(
-        id = "1234",
-        title = "title",
-        company = "company"
-    )
 }
