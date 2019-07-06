@@ -8,7 +8,7 @@ import ca.cbc.testingfun2.data.GitHubJob
 import ca.cbc.testingfun2.data.GitHubJobsRepository
 import ca.cbc.testingfun2.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -58,8 +58,9 @@ class GitHubJobsViewModelTest {
         assert(viewModel.gitHubJobs.value == expected)
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun insertGitHubJobCallsRepository() = runBlocking {
+    fun insertGitHubJobCallsRepository() = mainCoroutineRule.runBlockingTest {
         viewModel.insertJob(dummyJob)
         verify(repository).insertJob(dummyJob)
     }
