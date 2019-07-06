@@ -3,6 +3,7 @@ package ca.cbc.testingfun2
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
@@ -14,6 +15,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import ca.cbc.testingfun2.data.TheBestJobEverProvider
 import ca.cbc.testingfun2.ui.MainActivity
 import ca.cbc.testingfun2.util.EspressoIdlingResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.junit.After
@@ -22,7 +25,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-// fixme: How to avoid manually clearing the database each time in @After?
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
@@ -32,8 +34,13 @@ class MainActivityTest {
     @get:Rule
     var activityScenario = activityScenarioRule<MainActivity>()
 
+    @ExperimentalCoroutinesApi
     @Before
-    fun setUp() {
+    fun setUp() = runBlockingTest {
+        ApplicationProvider.getApplicationContext<App>()
+            .getAppDatabase()
+            .gitHubJobsDao()
+            .deleteAll()
         // Alternatively make this dagger dependency.
         IdlingRegistry.getInstance().register(EspressoIdlingResource)
     }
@@ -41,9 +48,6 @@ class MainActivityTest {
     @After
     fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource)
-        activityScenario.scenario.onActivity {
-            it.viewModel.clearGitHubJobs()
-        }
     }
 
     @Test

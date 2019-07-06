@@ -5,10 +5,12 @@ import androidx.room.Room
 import ca.cbc.testingfun2.data.AppDatabase
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 
 @Module
 object DataModule {
 
+    @AppScope
     @Provides
     @JvmStatic
     fun gitHubJobsDatabase(@AppContext appContext: Context): AppDatabase {
@@ -17,6 +19,7 @@ object DataModule {
             .build()
     }
 
+    @Reusable
     @Provides
     @JvmStatic
     fun gitHubJobsDao(appDatabase: AppDatabase) = appDatabase.gitHubJobsDao()
