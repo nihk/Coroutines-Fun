@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +25,8 @@ public class MainActivity extends DaggerAppCompatActivity {
     @Inject
     ViewModelFactory viewModelFactory;
 
-    private GitHubJobsViewModel viewModel;
+    @VisibleForTesting
+    public GitHubJobsViewModel viewModel;
     private GitHubJobsAdapter adapter = new GitHubJobsAdapter();
     private int id = 666;
 

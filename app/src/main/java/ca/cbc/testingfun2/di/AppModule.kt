@@ -3,18 +3,16 @@ package ca.cbc.testingfun2.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.room.Room
-import ca.cbc.testingfun2.data.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
-import kotlinx.coroutines.Dispatchers
 
 @Module(
     includes = [
         ViewModelModule::class,
         NetworkingModule::class,
-        RepositoryModule::class
+        RepositoryModule::class,
+        DataModule::class
     ]
 )
 object AppModule {
@@ -34,22 +32,4 @@ object AppModule {
             Context.MODE_PRIVATE
         )
     }
-
-    @AppScope
-    @Provides
-    @JvmStatic
-    fun gitHubJobsDatabase(@AppContext appContext: Context): AppDatabase {
-        return Room.databaseBuilder(appContext, AppDatabase::class.java, "app_database.db")
-            .build()
-    }
-
-    @Reusable
-    @Provides
-    @JvmStatic
-    fun gitHubJobsDao(appDatabase: AppDatabase) = appDatabase.gitHubJobsDao()
-
-    @Reusable
-    @Provides
-    @JvmStatic
-    fun ioDispatcher() = Dispatchers.IO
 }

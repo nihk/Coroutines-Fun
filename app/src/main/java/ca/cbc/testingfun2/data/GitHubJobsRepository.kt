@@ -8,4 +8,6 @@ interface GitHubJobsRepository {
     suspend fun insertJob(gitHubJob: GitHubJob)
 
     fun getGitHubJobs(): LiveData<Resource<List<GitHubJob>>>
+
+    suspend fun clearGitHubJobs()
 }

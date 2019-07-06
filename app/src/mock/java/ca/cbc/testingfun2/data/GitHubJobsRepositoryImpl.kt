@@ -28,10 +28,14 @@ class GitHubJobsRepositoryImpl @Inject constructor(
             }
 
             override suspend fun saveCallResult(data: List<GitHubJob>) {
-                gitHubJobsDao.deleteAll()
+                clearGitHubJobs()
                 gitHubJobsDao.insertAll(data)
             }
 
         }.asLiveData()
+    }
+
+    override suspend fun clearGitHubJobs() {
+        gitHubJobsDao.deleteAll()
     }
 }

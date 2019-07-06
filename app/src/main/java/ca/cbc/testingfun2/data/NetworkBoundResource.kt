@@ -5,6 +5,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import ca.cbc.testingfun2.util.EspressoIdlingResource
 import ca.cbc.testingfun2.util.Resource
+import kotlinx.coroutines.delay
 
 // https://developer.android.com/topic/libraries/architecture/coroutines
 abstract class NetworkBoundResource<T> {

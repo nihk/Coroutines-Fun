@@ -3,7 +3,7 @@ package ca.cbc.testingfun2.util
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 
-object EspressoIdlingResource : IdlingResource {
+object EspressoIdlingResource : IdlingResource, Countable {
 
     private val countingIdlingResource = CountingIdlingResource("github_jobs")
 
@@ -15,9 +15,9 @@ object EspressoIdlingResource : IdlingResource {
         countingIdlingResource.registerIdleTransitionCallback(callback)
     }
 
-    fun increment() = countingIdlingResource.increment()
+    override fun increment() = countingIdlingResource.increment()
 
-    fun decrement() {
+    override fun decrement() {
         countingIdlingResource.decrement()
     }
 }

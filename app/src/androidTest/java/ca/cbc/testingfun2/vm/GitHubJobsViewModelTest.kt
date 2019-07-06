@@ -3,11 +3,11 @@ package ca.cbc.testingfun2.vm
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ca.cbc.testingfun2.DummyGitHubJobCreator
+import ca.cbc.testingfun2.MainCoroutineRule
 import ca.cbc.testingfun2.data.GitHubJob
 import ca.cbc.testingfun2.data.GitHubJobsRepository
 import ca.cbc.testingfun2.util.Resource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -23,22 +23,30 @@ class GitHubJobsViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     @get:Rule
     var mockitoRule: MockitoRule = MockitoJUnit.rule()
 
     lateinit var repository: GitHubJobsRepository
     lateinit var viewModel: GitHubJobsViewModel
 
-    val dummyJob = DummyGitHubJobCreator.one()
+    private val dummyJob = GitHubJob(
+        id = "1",
+        title = "a",
+        company = "b"
+    )
 
     @Before
     fun setUp() {
         repository = mock(GitHubJobsRepository::class.java)
-        viewModel = GitHubJobsViewModel(repository, Dispatchers.Unconfined)
+        viewModel = GitHubJobsViewModel(repository)
     }
 
     @Test
-    fun fetchGitHubJobs() {
+    fun viewModelJobsLiveDataGetsValueFromRepository() {
         val expected = Resource.Success(listOf(dummyJob))
         val liveData = MutableLiveData<Resource<List<GitHubJob>>>().apply {
             value = expected
@@ -51,7 +59,7 @@ class GitHubJobsViewModelTest {
     }
 
     @Test
-    fun insertGitHubJob() = runBlocking {
+    fun insertGitHubJobCallsRepository() = runBlocking {
         viewModel.insertJob(dummyJob)
         verify(repository).insertJob(dummyJob)
     }
